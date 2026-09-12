@@ -108,16 +108,6 @@
             background: var(--panel-2);
         }
 
-        .button.primary {
-            background: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .button.primary:hover {
-            background: var(--accent-hover);
-            border-color: var(--accent-hover);
-        }
-
         .stats {
             display: grid;
             grid-template-columns: repeat(2, 1fr);
@@ -265,11 +255,6 @@
         .badge.blue {
             color: var(--blue);
             border-color: rgba(59, 130, 246, 0.25);
-        }
-
-        .badge.red {
-            color: var(--red);
-            border-color: rgba(239, 68, 68, 0.25);
         }
 
         .details {
@@ -492,13 +477,6 @@
                     id="refreshButton"
                 >
                     Refresh
-                </button>
-
-                <button
-                    class="button primary"
-                    id="exportButton"
-                >
-                    Export JSON
                 </button>
 
             </div>
@@ -1622,42 +1600,6 @@
         }
     }
 
-    function exportJSON() {
-        const json =
-            JSON.stringify(
-                allProperties,
-                null,
-                4
-            );
-
-        const blob =
-            new Blob(
-                [json],
-                {
-                    type: "application/json"
-                }
-            );
-
-        const url =
-            URL.createObjectURL(blob);
-
-        const link =
-            document.createElement("a");
-
-        link.href = url;
-
-        link.download =
-            "properties-export.json";
-
-        document.body.appendChild(link);
-
-        link.click();
-
-        link.remove();
-
-        URL.revokeObjectURL(url);
-    }
-
     const filterElements = [
         elements.searchInput,
         elements.statusFilter,
@@ -1689,13 +1631,6 @@
         .addEventListener(
             "click",
             loadProperties
-        );
-
-    document
-        .getElementById("exportButton")
-        .addEventListener(
-            "click",
-            exportJSON
         );
 
     loadProperties();
