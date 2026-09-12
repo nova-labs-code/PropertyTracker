@@ -1,0 +1,132 @@
+[
+    {
+        "id": "P0001",
+        "address": "123 Example Street",
+        "city": "Winchester",
+        "state": "VA",
+        "zip": "22601",
+        "phone": "(555) 123-4567",
+        "propertyType": "Single Family",
+        "estimatedValue": 350000,
+        "estimatedEquity": 280000,
+        "yearsOwned": 18,
+        "vacant": true,
+        "absenteeOwner": false,
+        "rentalProperty": false,
+        "condition": "Needs Work",
+        "status": "Not Started",
+        "timesCalled": 0,
+        "callHistory": [],
+        "sold": false,
+        "soldDate": null,
+        "showProperty": true,
+        "date": "2026-09-12",
+        "notes": "Example property"
+    },
+    {
+        "id": "P0002",
+        "address": "456 Example Avenue",
+        "city": "Winchester",
+        "state": "VA",
+        "zip": "22601",
+        "phone": "(555) 234-5678",
+        "propertyType": "Single Family",
+        "estimatedValue": 425000,
+        "estimatedEquity": 340000,
+        "yearsOwned": 11,
+        "vacant": false,
+        "absenteeOwner": true,
+        "rentalProperty": true,
+        "condition": "Good",
+        "status": "Follow Up",
+        "timesCalled": 3,
+        "callHistory": [
+            {
+                "date": "2026-09-12",
+                "result": "Voicemail"
+            },
+            {
+                "date": "2026-09-13",
+                "result": "Voicemail"
+            },
+            {
+                "date": "2026-09-14",
+                "result": "Answered"
+            }
+        ],
+        "sold": false,
+        "soldDate": null,
+        "showProperty": true,
+        "date": "2026-09-12",
+        "notes": "Example rental property"
+    },
+    {
+        "id": "P0003",
+        "address": "789 Example Road",
+        "city": "Winchester",
+        "state": "VA",
+        "zip": "22602",
+        "phone": "(555) 345-6789",
+        "propertyType": "Townhouse",
+        "estimatedValue": 295000,
+        "estimatedEquity": 245000,
+        "yearsOwned": 24,
+        "vacant": true,
+        "absenteeOwner": true,
+        "rentalProperty": false,
+        "condition": "Needs Work",
+        "status": "Not Started",
+        "timesCalled": 0,
+        "callHistory": [],
+        "sold": false,
+        "soldDate": null,
+        "showProperty": true,
+        "date": "2026-09-12",
+        "notes": "Example high-priority property"
+    },
+    {
+        "id": "P0004",
+        "address": "100 Hidden Street",
+        "city": "Winchester",
+        "state": "VA",
+        "zip": "22601",
+        "phone": "(555) 456-7890",
+        "propertyType": "Single Family",
+        "estimatedValue": 310000,
+        "estimatedEquity": 250000,
+        "yearsOwned": 15,
+        "vacant": false,
+        "absenteeOwner": false,
+        "rentalProperty": false,
+        "condition": "Good",
+        "status": "Completed",
+        "timesCalled": 5,
+        "callHistory": [
+            {
+                "date": "2026-09-12",
+                "result": "Voicemail"
+            },
+            {
+                "date": "2026-09-13",
+                "result": "Voicemail"
+            },
+            {
+                "date": "2026-09-15",
+                "result": "Answered"
+            },
+            {
+                "date": "2026-09-20",
+                "result": "Answered"
+            },
+            {
+                "date": "2026-10-01",
+                "result": "Answered"
+            }
+        ],
+        "sold": true,
+        "soldDate": "2026-10-15",
+        "showProperty": true,
+        "date": "2026-09-12",
+        "notes": "Sold property"
+    }
+]
