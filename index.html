@@ -1,0 +1,1705 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <title>Property Dashboard</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg: #090b10;
+            --panel: #11151d;
+            --panel-2: #161b24;
+            --border: #252c38;
+            --text: #f2f4f8;
+            --muted: #8e98a8;
+            --accent: #6366f1;
+            --accent-hover: #818cf8;
+            --green: #22c55e;
+            --yellow: #eab308;
+            --red: #ef4444;
+            --blue: #3b82f6;
+        }
+
+        html {
+            min-height: 100%;
+        }
+
+        body {
+            margin: 0;
+            min-height: 100vh;
+            background: var(--bg);
+            color: var(--text);
+            font-family:
+                Inter,
+                system-ui,
+                -apple-system,
+                BlinkMacSystemFont,
+                "Segoe UI",
+                sans-serif;
+        }
+
+        button,
+        input,
+        select {
+            font: inherit;
+        }
+
+        button,
+        select {
+            cursor: pointer;
+        }
+
+        .container {
+            width: min(1400px, calc(100% - 32px));
+            margin: 0 auto;
+        }
+
+        header {
+            padding: 34px 0 24px;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        h1 {
+            margin: 0;
+            font-size: 30px;
+            letter-spacing: -0.7px;
+        }
+
+        .subtitle {
+            margin-top: 7px;
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .button {
+            border: 1px solid var(--border);
+            background: var(--panel);
+            color: var(--text);
+            border-radius: 9px;
+            padding: 10px 14px;
+            transition: 0.15s ease;
+        }
+
+        .button:hover {
+            border-color: var(--accent);
+            background: var(--panel-2);
+        }
+
+        .button.primary {
+            background: var(--accent);
+            border-color: var(--accent);
+        }
+
+        .button.primary:hover {
+            background: var(--accent-hover);
+            border-color: var(--accent-hover);
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 14px;
+            padding: 24px 0;
+        }
+
+        .stat {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+        }
+
+        .stat-label {
+            color: var(--muted);
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .stat-value {
+            font-size: 27px;
+            font-weight: 700;
+        }
+
+        .filters {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 22px;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns:
+                minmax(200px, 2fr)
+                repeat(5, minmax(130px, 1fr));
+            gap: 10px;
+        }
+
+        .filter {
+            width: 100%;
+            min-width: 0;
+            padding: 10px 12px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            background: var(--panel-2);
+            color: var(--text);
+            outline: none;
+        }
+
+        .filter:focus {
+            border-color: var(--accent);
+        }
+
+        .filter::placeholder {
+            color: #687181;
+        }
+
+        .section-heading {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            margin: 24px 0 12px;
+        }
+
+        .section-heading h2 {
+            margin: 0;
+            font-size: 19px;
+        }
+
+        .section-count {
+            color: var(--muted);
+            font-size: 13px;
+        }
+
+        .properties {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 14px;
+        }
+
+        .property {
+            background: var(--panel);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 18px;
+            min-width: 0;
+        }
+
+        .property.sold-card {
+            border-color: rgba(34, 197, 94, 0.35);
+        }
+
+        .property-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .property-id {
+            color: var(--accent-hover);
+            font-weight: 700;
+            font-size: 13px;
+            margin-bottom: 5px;
+        }
+
+        .property-address {
+            font-size: 19px;
+            font-weight: 700;
+            line-height: 1.25;
+            overflow-wrap: anywhere;
+        }
+
+        .property-location {
+            color: var(--muted);
+            margin-top: 4px;
+            font-size: 13px;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 14px;
+        }
+
+        .badge {
+            border: 1px solid var(--border);
+            background: var(--panel-2);
+            border-radius: 999px;
+            padding: 5px 8px;
+            font-size: 11px;
+            color: var(--muted);
+        }
+
+        .badge.green {
+            color: var(--green);
+            border-color: rgba(34, 197, 94, 0.25);
+        }
+
+        .badge.blue {
+            color: var(--blue);
+            border-color: rgba(59, 130, 246, 0.25);
+        }
+
+        .badge.red {
+            color: var(--red);
+            border-color: rgba(239, 68, 68, 0.25);
+        }
+
+        .details {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 9px;
+            margin-top: 16px;
+        }
+
+        .detail {
+            background: var(--panel-2);
+            border-radius: 8px;
+            padding: 10px;
+            min-width: 0;
+        }
+
+        .detail-label {
+            color: var(--muted);
+            font-size: 11px;
+            margin-bottom: 3px;
+        }
+
+        .detail-value {
+            font-size: 13px;
+            font-weight: 600;
+            overflow-wrap: anywhere;
+        }
+
+        .phone-row {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-top: 15px;
+        }
+
+        .phone-number {
+            flex: 1;
+            min-width: 0;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 10px 12px;
+            overflow-wrap: anywhere;
+        }
+
+        .copy-button {
+            flex-shrink: 0;
+            border: 1px solid var(--border);
+            background: var(--panel-2);
+            color: var(--text);
+            border-radius: 8px;
+            padding: 10px 13px;
+            font-weight: 700;
+        }
+
+        .copy-button:hover {
+            border-color: var(--accent);
+        }
+
+        .copy-button.copied {
+            color: var(--green);
+            border-color: rgba(34, 197, 94, 0.4);
+        }
+
+        .history {
+            margin-top: 15px;
+            border-top: 1px solid var(--border);
+            padding-top: 13px;
+        }
+
+        .history-title {
+            color: var(--muted);
+            font-size: 12px;
+            margin-bottom: 8px;
+        }
+
+        .history-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .history-item {
+            font-size: 11px;
+            border-radius: 7px;
+            padding: 6px 8px;
+            background: var(--panel-2);
+            border: 1px solid var(--border);
+        }
+
+        .history-item.answered {
+            color: var(--green);
+        }
+
+        .history-item.voicemail {
+            color: var(--yellow);
+        }
+
+        .notes {
+            margin-top: 15px;
+            padding: 12px;
+            border-radius: 8px;
+            background: var(--panel-2);
+            color: #b7bfcc;
+            font-size: 13px;
+            line-height: 1.5;
+        }
+
+        .sold-section {
+            margin-top: 40px;
+            padding-top: 8px;
+            border-top: 1px solid var(--border);
+        }
+
+        .sold-banner {
+            background: rgba(34, 197, 94, 0.07);
+            border: 1px solid rgba(34, 197, 94, 0.2);
+            color: var(--green);
+            border-radius: 9px;
+            padding: 11px 13px;
+            font-size: 13px;
+            margin-bottom: 14px;
+        }
+
+        .empty {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 45px 20px;
+            color: var(--muted);
+            border: 1px dashed var(--border);
+            border-radius: 12px;
+        }
+
+        .error {
+            margin: 20px 0;
+            padding: 14px;
+            border-radius: 9px;
+            background: rgba(239, 68, 68, 0.08);
+            border: 1px solid rgba(239, 68, 68, 0.25);
+            color: #fca5a5;
+        }
+
+        .loading {
+            color: var(--muted);
+            text-align: center;
+            padding: 40px;
+        }
+
+        @media (max-width: 1050px) {
+            .filter-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+
+            .properties {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .container {
+                width: min(100% - 20px, 1400px);
+            }
+
+            header {
+                padding-top: 22px;
+            }
+
+            .header-row {
+                align-items: flex-start;
+                flex-direction: column;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .stats {
+                grid-template-columns: repeat(2, 1fr);
+            }
+
+            .filter-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .details {
+                grid-template-columns: 1fr;
+            }
+
+            .phone-row {
+                align-items: stretch;
+                flex-direction: column;
+            }
+
+            .copy-button {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+<header>
+    <div class="container">
+
+        <div class="header-row">
+
+            <div>
+                <h1>Property Dashboard</h1>
+
+                <div class="subtitle">
+                    Property leads, call activity, and sales tracking
+                </div>
+            </div>
+
+            <div class="header-actions">
+
+                <button
+                    class="button"
+                    id="refreshButton"
+                >
+                    Refresh
+                </button>
+
+                <button
+                    class="button primary"
+                    id="exportButton"
+                >
+                    Export JSON
+                </button>
+
+            </div>
+
+        </div>
+
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="stats">
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Visible Properties
+            </div>
+
+            <div
+                class="stat-value"
+                id="visibleCount"
+            >
+                0
+            </div>
+
+        </div>
+
+        <div class="stat">
+
+            <div class="stat-label">
+                Active Calls
+            </div>
+
+            <div
+                class="stat-value"
+                id="activeCalls"
+            >
+                0
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="filters">
+
+        <div class="filter-grid">
+
+            <input
+                class="filter"
+                id="searchInput"
+                type="search"
+                placeholder="Search properties..."
+            >
+
+            <select
+                class="filter"
+                id="statusFilter"
+            >
+                <option value="all">
+                    All Call Statuses
+                </option>
+
+                <option value="Not Started">
+                    Not Started
+                </option>
+
+                <option value="Active">
+                    Active
+                </option>
+
+                <option value="Follow Up">
+                    Follow Up
+                </option>
+
+                <option value="Completed">
+                    Completed
+                </option>
+
+                <option value="Not Interested">
+                    Not Interested
+                </option>
+            </select>
+
+            <select
+                class="filter"
+                id="sortFilter"
+            >
+                <option value="id">
+                    Property ID
+                </option>
+
+                <option value="address">
+                    Address
+                </option>
+
+                <option value="newest">
+                    Newest Date
+                </option>
+
+                <option value="oldest">
+                    Oldest Date
+                </option>
+            </select>
+
+            <select
+                class="filter"
+                id="typeFilter"
+            >
+                <option value="all">
+                    All Property Types
+                </option>
+            </select>
+
+            <select
+                class="filter"
+                id="conditionFilter"
+            >
+                <option value="all">
+                    All Conditions
+                </option>
+            </select>
+
+            <select
+                class="filter"
+                id="vacancyFilter"
+            >
+                <option value="all">
+                    All Vacancy
+                </option>
+
+                <option value="true">
+                    Vacant
+                </option>
+
+                <option value="false">
+                    Occupied
+                </option>
+            </select>
+
+            <select
+                class="filter"
+                id="absenteeFilter"
+            >
+                <option value="all">
+                    All Ownership
+                </option>
+
+                <option value="true">
+                    Absentee Owner
+                </option>
+
+                <option value="false">
+                    Owner Occupied
+                </option>
+            </select>
+
+            <select
+                class="filter"
+                id="rentalFilter"
+            >
+                <option value="all">
+                    All Rental Types
+                </option>
+
+                <option value="true">
+                    Rental
+                </option>
+
+                <option value="false">
+                    Not Rental
+                </option>
+            </select>
+
+            <select
+                class="filter"
+                id="detailsFilter"
+            >
+                <option value="all">
+                    Show All Details
+                </option>
+
+                <option value="financial">
+                    Hide Financial Details
+                </option>
+
+                <option value="ownership">
+                    Hide Ownership Details
+                </option>
+
+                <option value="notes">
+                    Hide Notes
+                </option>
+
+                <option value="minimal">
+                    Minimal View
+                </option>
+            </select>
+
+        </div>
+
+    </section>
+
+    <div id="errorContainer"></div>
+
+    <section>
+
+        <div class="section-heading">
+
+            <h2>
+                Properties
+            </h2>
+
+            <div
+                class="section-count"
+                id="propertyCount"
+            >
+                0 properties
+            </div>
+
+        </div>
+
+        <div
+            class="properties"
+            id="propertyList"
+        >
+            <div class="loading">
+                Loading properties...
+            </div>
+        </div>
+
+    </section>
+
+    <section
+        class="sold-section"
+        id="soldSection"
+    >
+
+        <div class="section-heading">
+
+            <h2>
+                Sold
+            </h2>
+
+            <div
+                class="section-count"
+                id="soldCount"
+            >
+                0 sold
+            </div>
+
+        </div>
+
+        <div class="sold-banner">
+            Sold properties remain here for historical tracking.
+        </div>
+
+        <div
+            class="properties"
+            id="soldList"
+        ></div>
+
+    </section>
+
+</main>
+
+<script>
+    let allProperties = [];
+
+    const elements = {
+        propertyList:
+            document.getElementById("propertyList"),
+
+        soldList:
+            document.getElementById("soldList"),
+
+        soldSection:
+            document.getElementById("soldSection"),
+
+        propertyCount:
+            document.getElementById("propertyCount"),
+
+        soldCount:
+            document.getElementById("soldCount"),
+
+        visibleCount:
+            document.getElementById("visibleCount"),
+
+        activeCalls:
+            document.getElementById("activeCalls"),
+
+        searchInput:
+            document.getElementById("searchInput"),
+
+        statusFilter:
+            document.getElementById("statusFilter"),
+
+        sortFilter:
+            document.getElementById("sortFilter"),
+
+        typeFilter:
+            document.getElementById("typeFilter"),
+
+        conditionFilter:
+            document.getElementById("conditionFilter"),
+
+        vacancyFilter:
+            document.getElementById("vacancyFilter"),
+
+        absenteeFilter:
+            document.getElementById("absenteeFilter"),
+
+        rentalFilter:
+            document.getElementById("rentalFilter"),
+
+        detailsFilter:
+            document.getElementById("detailsFilter"),
+
+        errorContainer:
+            document.getElementById("errorContainer")
+    };
+
+    function escapeHTML(value) {
+        return String(value ?? "")
+            .replace(/&/g, "&amp;")
+            .replace(/</g, "&lt;")
+            .replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;")
+            .replace(/'/g, "&#039;");
+    }
+
+    function normalizePhone(phone) {
+        if (!phone) {
+            return "";
+        }
+
+        const digits =
+            String(phone).replace(/\D/g, "");
+
+        if (digits.length === 10) {
+            return "+1" + digits;
+        }
+
+        if (
+            digits.length === 11 &&
+            digits.startsWith("1")
+        ) {
+            return "+" + digits;
+        }
+
+        return "+" + digits;
+    }
+
+    async function copyPhone(button, phone) {
+        const formatted =
+            normalizePhone(phone);
+
+        if (!formatted) {
+            return;
+        }
+
+        try {
+            await navigator.clipboard.writeText(
+                formatted
+            );
+        } catch (error) {
+            const textarea =
+                document.createElement("textarea");
+
+            textarea.value = formatted;
+
+            document.body.appendChild(textarea);
+
+            textarea.select();
+
+            document.execCommand("copy");
+
+            textarea.remove();
+        }
+
+        const originalText =
+            button.textContent;
+
+        button.textContent =
+            "Copied";
+
+        button.classList.add("copied");
+
+        setTimeout(() => {
+            button.textContent =
+                originalText;
+
+            button.classList.remove("copied");
+        }, 1200);
+    }
+
+    function formatCurrency(value) {
+        const number = Number(value);
+
+        if (!Number.isFinite(number)) {
+            return "N/A";
+        }
+
+        return new Intl.NumberFormat(
+            "en-US",
+            {
+                style: "currency",
+                currency: "USD",
+                maximumFractionDigits: 0
+            }
+        ).format(number);
+    }
+
+    function formatDate(value) {
+        if (!value) {
+            return "N/A";
+        }
+
+        const date =
+            new Date(value + "T00:00:00");
+
+        if (Number.isNaN(date.getTime())) {
+            return escapeHTML(value);
+        }
+
+        return date.toLocaleDateString(
+            "en-US",
+            {
+                year: "numeric",
+                month: "short",
+                day: "numeric"
+            }
+        );
+    }
+
+    function getCallCount(property) {
+        if (
+            Array.isArray(property.callHistory)
+        ) {
+            return property.callHistory.length;
+        }
+
+        return Number(property.timesCalled) || 0;
+    }
+
+    function getSearchText(property) {
+        return Object.values(property)
+            .map(value => {
+                if (Array.isArray(value)) {
+                    return JSON.stringify(value);
+                }
+
+                if (
+                    typeof value === "object" &&
+                    value !== null
+                ) {
+                    return JSON.stringify(value);
+                }
+
+                return String(value ?? "");
+            })
+            .join(" ")
+            .toLowerCase();
+    }
+
+    function matchesFilters(property) {
+        const search =
+            elements.searchInput.value
+                .trim()
+                .toLowerCase();
+
+        if (
+            search &&
+            !getSearchText(property).includes(search)
+        ) {
+            return false;
+        }
+
+        const status =
+            elements.statusFilter.value;
+
+        if (
+            status !== "all" &&
+            property.status !== status
+        ) {
+            return false;
+        }
+
+        const type =
+            elements.typeFilter.value;
+
+        if (
+            type !== "all" &&
+            property.propertyType !== type
+        ) {
+            return false;
+        }
+
+        const condition =
+            elements.conditionFilter.value;
+
+        if (
+            condition !== "all" &&
+            property.condition !== condition
+        ) {
+            return false;
+        }
+
+        const vacancy =
+            elements.vacancyFilter.value;
+
+        if (
+            vacancy !== "all" &&
+            String(property.vacant) !== vacancy
+        ) {
+            return false;
+        }
+
+        const absentee =
+            elements.absenteeFilter.value;
+
+        if (
+            absentee !== "all" &&
+            String(property.absenteeOwner) !== absentee
+        ) {
+            return false;
+        }
+
+        const rental =
+            elements.rentalFilter.value;
+
+        if (
+            rental !== "all" &&
+            String(property.rentalProperty) !== rental
+        ) {
+            return false;
+        }
+
+        return true;
+    }
+
+    function sortProperties(properties) {
+        const sort =
+            elements.sortFilter.value;
+
+        return [...properties].sort((a, b) => {
+
+            if (sort === "id") {
+                return String(a.id || "")
+                    .localeCompare(
+                        String(b.id || ""),
+                        undefined,
+                        {
+                            numeric: true
+                        }
+                    );
+            }
+
+            if (sort === "address") {
+                return String(a.address || "")
+                    .localeCompare(
+                        String(b.address || "")
+                    );
+            }
+
+            if (sort === "newest") {
+                return (
+                    new Date(b.date || 0) -
+                    new Date(a.date || 0)
+                );
+            }
+
+            if (sort === "oldest") {
+                return (
+                    new Date(a.date || 0) -
+                    new Date(b.date || 0)
+                );
+            }
+
+            return 0;
+        });
+    }
+
+    function detailHTML(label, value) {
+        return `
+            <div class="detail">
+
+                <div class="detail-label">
+                    ${escapeHTML(label)}
+                </div>
+
+                <div class="detail-value">
+                    ${escapeHTML(value)}
+                </div>
+
+            </div>
+        `;
+    }
+
+    function renderDetails(property) {
+        const mode =
+            elements.detailsFilter.value;
+
+        if (mode === "minimal") {
+            return `
+                <div class="details">
+
+                    ${detailHTML(
+                        "Type",
+                        property.propertyType || "N/A"
+                    )}
+
+                    ${detailHTML(
+                        "Condition",
+                        property.condition || "N/A"
+                    )}
+
+                    ${detailHTML(
+                        "Status",
+                        property.status || "N/A"
+                    )}
+
+                    ${detailHTML(
+                        "Date Added",
+                        formatDate(property.date)
+                    )}
+
+                </div>
+            `;
+        }
+
+        let html = `
+            <div class="details">
+
+                ${detailHTML(
+                    "Property Type",
+                    property.propertyType || "N/A"
+                )}
+
+                ${detailHTML(
+                    "Condition",
+                    property.condition || "N/A"
+                )}
+
+                ${detailHTML(
+                    "Status",
+                    property.status || "N/A"
+                )}
+
+                ${detailHTML(
+                    "Date Added",
+                    formatDate(property.date)
+                )}
+        `;
+
+        if (mode !== "financial") {
+            html += `
+                ${detailHTML(
+                    "Estimated Value",
+                    formatCurrency(
+                        property.estimatedValue
+                    )
+                )}
+
+                ${detailHTML(
+                    "Estimated Equity",
+                    formatCurrency(
+                        property.estimatedEquity
+                    )
+                )}
+            `;
+        }
+
+        if (mode !== "ownership") {
+            html += `
+                ${detailHTML(
+                    "Years Owned",
+                    property.yearsOwned ?? "N/A"
+                )}
+
+                ${detailHTML(
+                    "Absentee Owner",
+                    property.absenteeOwner
+                        ? "Yes"
+                        : "No"
+                )}
+
+                ${detailHTML(
+                    "Rental Property",
+                    property.rentalProperty
+                        ? "Yes"
+                        : "No"
+                )}
+            `;
+        }
+
+        html += `
+                ${detailHTML(
+                    "Vacant",
+                    property.vacant
+                        ? "Yes"
+                        : "No"
+                )}
+
+            </div>
+        `;
+
+        return html;
+    }
+
+    function renderHistory(property) {
+        const history =
+            Array.isArray(property.callHistory)
+                ? property.callHistory
+                : [];
+
+        if (!history.length) {
+            return "";
+        }
+
+        const items =
+            [...history]
+                .reverse()
+                .map(call => {
+
+                    const result =
+                        String(
+                            call.result || ""
+                        );
+
+                    const resultClass =
+                        result.toLowerCase() ===
+                        "answered"
+                            ? "answered"
+                            : "voicemail";
+
+                    return `
+                        <div
+                            class="
+                                history-item
+                                ${resultClass}
+                            "
+                        >
+                            ${escapeHTML(
+                                formatDate(call.date)
+                            )}
+                            ·
+                            ${escapeHTML(result)}
+                        </div>
+                    `;
+                })
+                .join("");
+
+        return `
+            <div class="history">
+
+                <div class="history-title">
+                    Call History
+                </div>
+
+                <div class="history-list">
+                    ${items}
+                </div>
+
+            </div>
+        `;
+    }
+
+    function propertyHTML(property) {
+        const phone =
+            property.phone || "";
+
+        const badges = [];
+
+        if (property.vacant) {
+            badges.push(
+                `<span class="badge green">Vacant</span>`
+            );
+        }
+
+        if (property.absenteeOwner) {
+            badges.push(
+                `<span class="badge blue">
+                    Absentee Owner
+                </span>`
+            );
+        }
+
+        if (property.rentalProperty) {
+            badges.push(
+                `<span class="badge blue">
+                    Rental
+                </span>`
+            );
+        }
+
+        if (property.status === "Active") {
+            badges.push(
+                `<span class="badge green">
+                    Active Call
+                </span>`
+            );
+        }
+
+        if (property.status === "Follow Up") {
+            badges.push(
+                `<span class="badge blue">
+                    Follow Up
+                </span>`
+            );
+        }
+
+        if (property.sold) {
+            badges.push(
+                `<span class="badge green">
+                    Sold
+                </span>`
+            );
+        }
+
+        return `
+            <article
+                class="
+                    property
+                    ${property.sold ? "sold-card" : ""}
+                "
+            >
+
+                <div class="property-top">
+
+                    <div>
+
+                        <div class="property-id">
+                            ${escapeHTML(property.id)}
+                        </div>
+
+                        <div class="property-address">
+                            ${escapeHTML(property.address)}
+                        </div>
+
+                        <div class="property-location">
+                            ${escapeHTML(property.city)},
+                            ${escapeHTML(property.state)}
+                            ${escapeHTML(property.zip)}
+                        </div>
+
+                    </div>
+
+                </div>
+
+                ${
+                    badges.length
+                        ? `
+                            <div class="badges">
+                                ${badges.join("")}
+                            </div>
+                        `
+                        : ""
+                }
+
+                ${renderDetails(property)}
+
+                ${
+                    phone
+                        ? `
+                            <div class="phone-row">
+
+                                <div class="phone-number">
+                                    ${escapeHTML(phone)}
+                                </div>
+
+                                <button
+                                    class="copy-button"
+                                    data-phone="${escapeHTML(phone)}"
+                                >
+                                    Copy Phone Number
+                                </button>
+
+                            </div>
+                        `
+                        : ""
+                }
+
+                <div class="details">
+
+                    ${detailHTML(
+                        "Times Called",
+                        getCallCount(property)
+                    )}
+
+                    ${
+                        property.sold
+                            ? detailHTML(
+                                "Sold Date",
+                                formatDate(
+                                    property.soldDate
+                                )
+                            )
+                            : ""
+                    }
+
+                </div>
+
+                ${renderHistory(property)}
+
+                ${
+                    elements.detailsFilter.value !==
+                        "notes" &&
+                    elements.detailsFilter.value !==
+                        "minimal" &&
+                    property.notes
+                        ? `
+                            <div class="notes">
+                                ${escapeHTML(
+                                    property.notes
+                                )}
+                            </div>
+                        `
+                        : ""
+                }
+
+            </article>
+        `;
+    }
+
+    function updateStats(properties) {
+        elements.visibleCount.textContent =
+            properties.length;
+
+        elements.activeCalls.textContent =
+            properties.filter(
+                property =>
+                    property.status === "Active"
+            ).length;
+    }
+
+    function render() {
+        const visible =
+            allProperties.filter(
+                property =>
+                    property.showProperty !== false
+            );
+
+        const active =
+            visible.filter(
+                property =>
+                    property.sold !== true
+            );
+
+        const sold =
+            visible.filter(
+                property =>
+                    property.sold === true
+            );
+
+        const filteredActive =
+            sortProperties(
+                active.filter(matchesFilters)
+            );
+
+        const filteredSold =
+            sortProperties(
+                sold.filter(matchesFilters)
+            );
+
+        updateStats(filteredActive);
+
+        elements.propertyCount.textContent =
+            `${filteredActive.length} properties`;
+
+        elements.soldCount.textContent =
+            `${filteredSold.length} sold`;
+
+        if (!filteredActive.length) {
+            elements.propertyList.innerHTML = `
+                <div class="empty">
+                    No properties match the current filters.
+                </div>
+            `;
+        } else {
+            elements.propertyList.innerHTML =
+                filteredActive
+                    .map(propertyHTML)
+                    .join("");
+        }
+
+        if (!filteredSold.length) {
+            elements.soldList.innerHTML = `
+                <div class="empty">
+                    No sold properties match the current filters.
+                </div>
+            `;
+        } else {
+            elements.soldList.innerHTML =
+                filteredSold
+                    .map(propertyHTML)
+                    .join("");
+        }
+
+        elements.soldSection.style.display =
+            visible.some(
+                property =>
+                    property.sold === true
+            )
+                ? ""
+                : "none";
+
+        document
+            .querySelectorAll(".copy-button")
+            .forEach(button => {
+
+                button.addEventListener(
+                    "click",
+                    () => {
+                        copyPhone(
+                            button,
+                            button.dataset.phone
+                        );
+                    }
+                );
+
+            });
+    }
+
+    function populateFilters() {
+        const types =
+            [...new Set(
+                allProperties
+                    .map(property =>
+                        property.propertyType
+                    )
+                    .filter(Boolean)
+            )].sort();
+
+        const conditions =
+            [...new Set(
+                allProperties
+                    .map(property =>
+                        property.condition
+                    )
+                    .filter(Boolean)
+            )].sort();
+
+        elements.typeFilter.innerHTML = `
+            <option value="all">
+                All Property Types
+            </option>
+
+            ${types.map(type => `
+                <option value="${escapeHTML(type)}">
+                    ${escapeHTML(type)}
+                </option>
+            `).join("")}
+        `;
+
+        elements.conditionFilter.innerHTML = `
+            <option value="all">
+                All Conditions
+            </option>
+
+            ${conditions.map(condition => `
+                <option value="${escapeHTML(condition)}">
+                    ${escapeHTML(condition)}
+                </option>
+            `).join("")}
+        `;
+    }
+
+    async function loadProperties() {
+        elements.errorContainer.innerHTML = "";
+
+        elements.propertyList.innerHTML = `
+            <div class="loading">
+                Loading properties...
+            </div>
+        `;
+
+        try {
+            const response =
+                await fetch(
+                    `properties.json?t=${Date.now()}`,
+                    {
+                        cache: "no-store"
+                    }
+                );
+
+            if (!response.ok) {
+                throw new Error(
+                    `HTTP ${response.status}`
+                );
+            }
+
+            const data =
+                await response.json();
+
+            if (!Array.isArray(data)) {
+                throw new Error(
+                    "properties.json must contain an array."
+                );
+            }
+
+            allProperties = data;
+
+            populateFilters();
+
+            render();
+
+        } catch (error) {
+
+            console.error(error);
+
+            elements.propertyList.innerHTML = "";
+
+            elements.errorContainer.innerHTML = `
+                <div class="error">
+                    Could not load properties.json.
+                    ${escapeHTML(error.message)}
+                </div>
+            `;
+        }
+    }
+
+    function exportJSON() {
+        const json =
+            JSON.stringify(
+                allProperties,
+                null,
+                4
+            );
+
+        const blob =
+            new Blob(
+                [json],
+                {
+                    type: "application/json"
+                }
+            );
+
+        const url =
+            URL.createObjectURL(blob);
+
+        const link =
+            document.createElement("a");
+
+        link.href = url;
+
+        link.download =
+            "properties-export.json";
+
+        document.body.appendChild(link);
+
+        link.click();
+
+        link.remove();
+
+        URL.revokeObjectURL(url);
+    }
+
+    const filterElements = [
+        elements.searchInput,
+        elements.statusFilter,
+        elements.sortFilter,
+        elements.typeFilter,
+        elements.conditionFilter,
+        elements.vacancyFilter,
+        elements.absenteeFilter,
+        elements.rentalFilter,
+        elements.detailsFilter
+    ];
+
+    filterElements.forEach(element => {
+
+        element.addEventListener(
+            "input",
+            render
+        );
+
+        element.addEventListener(
+            "change",
+            render
+        );
+
+    });
+
+    document
+        .getElementById("refreshButton")
+        .addEventListener(
+            "click",
+            loadProperties
+        );
+
+    document
+        .getElementById("exportButton")
+        .addEventListener(
+            "click",
+            exportJSON
+        );
+
+    loadProperties();
+</script>
+
+</body>
+</html>
